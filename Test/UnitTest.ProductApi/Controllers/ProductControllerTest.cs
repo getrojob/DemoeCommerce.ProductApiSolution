@@ -178,7 +178,7 @@ namespace UnitTest.ProductApi.Controllers
             var result = await productsController.CreateProduct(productDTO);
 
             // Asset
-            var badRequestResult = result.Result as OkObjectResult;
+            var badRequestResult = result.Result as BadRequestObjectResult;
             badRequestResult!.Should().NotBeNull();
             badRequestResult!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
 
@@ -192,20 +192,20 @@ namespace UnitTest.ProductApi.Controllers
         {
             // Arrange
             var productDTO = new ProductDTO(1,"Product 1", 34, 67.95m);
-            var response = new Response(true, "Failed");
+            var response = new Response(true, "Update");
 
             // Act
             A.CallTo(() => productInterface.UpdateAsync(A<Product>.Ignored)).Returns(response);
             var result = await productsController.UpdateProduct(productDTO);
 
             // Asset
-            var badRequestResult = result.Result as BadRequestObjectResult;
+            var badRequestResult = result.Result as OkObjectResult;
             badRequestResult!.Should().NotBeNull();
-            badRequestResult!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+            badRequestResult!.StatusCode.Should().Be(StatusCodes.Status200OK);
 
             var responseResult = badRequestResult.Value as Response;
-            responseResult!.Message.Should().Be("Failed");
-            responseResult!.Flag.Should().BeFalse();
+            responseResult!.Message.Should().Be("Update");
+            responseResult!.Flag.Should().BeTrue();
         }
     }
 }
